@@ -1,0 +1,10 @@
+---
+title: "index.rmd"
+author: "Hamza Mustafa"
+date: "2/26/2020"
+output: html_document
+---
+
+This is my new web site!
+
+ [This my Lab5](Lab_5_.html)
