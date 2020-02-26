@@ -1,0 +1,85 @@
+---
+title: "Lab 4"
+author: "Hamza Mustafa"
+date: "2/12/2020"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+SNPs<- read.table("23andMe_complete.txt",header = TRUE, sep = "\t")
+
+
+```
+
+
+
+
+```{r}
+#EXERCISE 1
+
+
+BarGraph1 <- ggplot(data = SNPs) + geom_bar(mapping = aes(x=chromosome), fill ="blue") + ggtitle("Hamza")
+BarGraph1
+
+```
+
+
+```{r}
+#Exercise 2 
+
+
+Graph3 <- ggplot(data = SNPs) + geom_bar(mapping = aes(x = chromosome, fill= genotype)) + ggtitle("Hamza") 
+Graph3 + ylab("Genotype Count")+ xlab("Chromosome number")
+
+mycolor<-c("AA"="green","AC"="green","AG"="green","AT"="green","CC"="green","CG"="green","CT"="green","D"="purple","DD"="purple","DI"="purple","GG"="green","GT"="green","I"="purple","II"="purple","TT" ="green","A"="blue","C"="blue","G"="blue","T"="blue","--"="black")     
+Graph3 + scale_fill_manual(values=mycolor)
+
+```
+
+```{r}
+
+#Exercise 3
+
+```
+![Genotype counts per chromosome](Rplot.png)
+
+
+
+
+
+```{r}
+#Exercise 4
+
+```
+![Total SNPs each chromosome](Rplot05.png)
+
+
+
+```{r}
+#Exercise 5
+
+
+library(plotly)
+
+Graph5 <- ggplotly(ggplot(data = SNPs) + geom_bar(mapping = aes(x = chromosome, fill= genotype), position = "dodge") + facet_wrap(~genotype, ncol = 2, nrow = 15) + ggtitle("Total SNPs each chromosome") + ylab("Genotype Count") + xlab("Chromosome Numbers"), width = 1000, height = 1000)
+Graph5[["x"]][["layout"]][["annotations"]][[2]][["x"]] <- -0.05
+Graph5
+
+
+```
+
+
+
+```{r}
+
+#Excercise 6
+
+
+library(DT)
+
+R <- subset(SNPs, chromosome == "Y" )
+datatable(R)
+
+```
+
