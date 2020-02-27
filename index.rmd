@@ -8,7 +8,7 @@ bibliography: data/references.bib
 
 This is my new web site!
   
- [This my Lab2](Lab_2b.html.html)
+ [This my Lab2](Lab_2.html.html)
  
  [This my Lab3](Lab_3.html.html)
   
