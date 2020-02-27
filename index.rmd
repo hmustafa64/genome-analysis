@@ -8,11 +8,13 @@ bibliography: data/references.bib
 
 This is my new web site!
   
- [This my lab3](Lab_3.html.html)
+ [This my Lab2](Lab_2b.html.html)
+ 
+ [This my Lab3](Lab_3.html.html)
   
  [This my Lab4](Lab_4.html.html)
  
- [This my Lab5](Lab_5.html.html) [@RCoreTeam]
-
-
+ [This my Lab5](Lab_5.html.html)(R Core Team 2015)
+ 
+ 
 ### References
