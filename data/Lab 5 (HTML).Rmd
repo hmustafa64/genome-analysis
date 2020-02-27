@@ -1,0 +1,76 @@
+---
+title: "LAB 5"
+author: "Hamza Mustafa"
+date: "2/19/2020"
+output: html_document
+---
+
+
+
+
+```{r}
+#Exercise 1
+
+select(SNPs, position, genotype)
+
+```
+
+
+```{r}
+#Exercise 2
+
+SNPs %>%
+  filter(chromosome == "MT") %>% 
+  filter(genotype != "A") %>% 
+  filter(genotype != "T") 
+
+
+```
+
+
+```{r}
+#Excercise 3
+
+SNPs %>%
+group_by(chromosome) %>% 
+summarize(min_positon = min(position), 
+         max_position = max(position), 
+         n = n())
+```
+
+
+```{r}
+#Excercise 4  
+
+SNPs %>%
+  group_by(chromosome) %>% 
+  summarize(min_positon = min(position), 
+            max_position = max(position), 
+            n = n()) %>%
+ mutate(density = n / (max_position - min_positon))
+```
+
+
+```{r}
+#Exercise 5
+
+SNPs %>%
+  group_by(chromosome) %>% 
+  summarize(min_positon = min(position), 
+            max_position = max(position), 
+            n = n()) %>% 
+  mutate(density = n / (max_position - min_positon))  %>% 
+   arrange (density)
+
+```
+
+```{r}
+
+#Exercise 6
+
+  write_csv(SNPs, path = "data/surveys_complete.csv")
+
+
+
+```
+
