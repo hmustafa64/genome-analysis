@@ -18,4 +18,9 @@ This is my new web site!
  
 
 # References
- (data/references.bib)
+ ---
+nocite: |
+  @Misc, @Article
+...
+
+@Misc
