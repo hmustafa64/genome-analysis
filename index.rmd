@@ -18,10 +18,17 @@ This is my new web site!
  
  [This my Lab about NOVEL CORONA VIRUS COVID-19](COVID-19.html)
  
- [R Core Team 2015]
+ [Data Maps, Interactive Graphs and Animations from the COVID-19 reporting data](Lab_10.html)
+ 
+ 
  
 
 [@RCoreTeam]
 [@Chang2015]
+[@Hopkins2020]
+
+
+
+
 
 # References
