@@ -1,0 +1,237 @@
+---
+title: "Lab 10"
+author: "Hamza Mustafa"
+date: "4/1/2020"
+output: html_document
+---
+This is my Data for COVID-19 Novel Corona virus that hit the world very hard. Different the countries are seeing different levels of COVID-19 activity. The United States nationally is in the acceleration phase of the pandemic.  The duration and severity of each pandemic phase can vary depending on the characteristics of the virus and the public health response.Every state in the United State is seeing different level of COVID-19 activity. My Report will show until March 28 2020. The First Map shows the Global activity, then United States and Specifically New Jersy Map and effected areas of New Jersy with Red the most effected and yellow the least effected. New Jersy is  one of the state in northeast that is most effected by this Corona virus. At the end the animated graph will show
+rise in Italy,Iran,Spain and US between Feb 1 2020 to April 1 2020. 
+
+```{r}
+
+library(tidyverse)
+library(maps)
+library(mapdata)
+library(lubridate)
+library(viridis)
+library(wesanderson)
+
+```
+
+The blue color in this map explain the areas of the world effected and the bigger the blue circles means more cases reported in those countries or areas
+```{r}
+daily_report <- read_csv(url("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-28-2020.csv")) %>% 
+  rename(Long = "Long_") 
+    
+ggplot(daily_report, aes(x = Long, y = Lat, size = Confirmed/1000)) +
+    borders("world", colour = NA, fill = "grey90") +
+    theme_bw() +
+    geom_point(shape = 21, color='blue', fill='blue', alpha = 0.5) +
+    labs(title = 'World COVID-19 Confirmed cases',x = '', y = '',
+        size="Cases (x1000))") +
+    theme(legend.position = "right") +
+    coord_fixed(ratio=1.5)
+
+```
+
+This United States  map tell us about the cases reported in different states and specifically the large circles means most cases were reported in that part of the country.
+```{r}
+daily_report <-   read_csv(url("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-28-2020.csv")) %>% 
+  rename(Long = "Long_") %>% 
+  filter(Country_Region == "US") %>% 
+  filter (!Province_State %in% c("Alaska","Hawaii", "American Samoa",
+                  "Puerto Rico","Northern Mariana Islands", 
+                  "Virgin Islands", "Recovered", "Guam", "Grand Princess",
+                  "District of Columbia", "Diamond Princess")) %>% 
+  filter(Lat > 0)
+
+ggplot(daily_report, aes(x = Long, y = Lat, size = Confirmed/1000)) +
+    borders("state", colour = "black", fill = "grey90") +
+    theme_bw() +
+    geom_point(shape = 21, color='blue', fill='blue', alpha = 0.5) +
+    labs(title = 'COVID-19 Confirmed Cases in the US', x = '', y = '',
+        size="Cases (x1000))") +
+    theme(legend.position = "right") +
+    coord_fixed(ratio=1.5)
+
+```
+
+
+Map of United States explain that the light blue colors explain that there are more cases and dark blue or black means less or no case in those States.
+```{r}
+daily_report <- read_csv(url("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-28-2020.csv")) %>% 
+  rename(Long = "Long_") %>% 
+  filter(Country_Region == "US") %>% 
+  group_by(Province_State) %>% 
+  summarize(Confirmed = sum(Confirmed)) %>% 
+  mutate(Province_State = tolower(Province_State))
+
+# load the US map data
+us <- map_data("state")
+# We need to join the us map data with our daily report to make one data frame/tibble
+state_join <- left_join(us, daily_report, by = c("region" = "Province_State"))
+
+# plot state map
+ggplot(data = us, mapping = aes(x = long, y = lat, group = group)) + 
+  coord_fixed(1.3) + 
+# Add data layer
+  geom_polygon(data = state_join, aes(fill = Confirmed), color = "white") +
+  geom_polygon(color = "black" , fill = NA ) +
+  scale_fill_gradient(trans = "log10") +
+  labs(title = "COVID-19 Confirmed Cases in the US'")
+
+```
+
+This Explains the same concept with different colors as red is the one with most effected states and yellow is with the least, light green with more and dark green with less cases in the State. 
+```{r}
+
+ggplot(data = us, mapping = aes(x = long, y = lat, group = group)) + 
+  coord_fixed(1.3) + 
+# Add data layer
+  geom_polygon(data = state_join, aes(fill = Confirmed), color = "white") +
+  geom_polygon(color = "black", fill = NA) +
+  scale_fill_gradientn(colours = 
+                         wes_palette("Cavalcanti1", 100, type = "continuous"),
+                         trans = "log10") +
+  labs(title = "COVID-19 Confirmed Cases in the US'")
+
+```
+
+This is the Map of New Jersey State in the Northeast of United States. The red color show where most cases found in the state or we can say specific city  which is Bergen Until March 28 2020. 
+
+```{r}
+daily_report <-   read_csv(url("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/03-28-2020.csv")) %>% 
+  rename(Long = "Long_") %>% 
+  filter(Province_State == "New Jersey") %>% 
+  group_by(Admin2) %>% 
+  summarize(Confirmed = sum(Confirmed)) %>% 
+  mutate(Admin2 = tolower(Admin2))
+
+us <- map_data("state")
+ma_us <- subset(us, region == "New Jersey")
+counties <- map_data("county")
+ma_county <- subset(counties, region == "new jersey")
+
+state_join <- left_join(ma_county, daily_report, by = c("subregion" = "Admin2")) 
+
+# plot state map
+ggplot(data = ma_county, mapping = aes(x = long, y = lat, group = group)) + 
+  coord_fixed(1.3) + 
+# Add data layer
+  geom_polygon(data = state_join, aes(fill = Confirmed), color = "white") +
+    scale_fill_gradientn(colours = 
+                         wes_palette("Cavalcanti1", 100, type = "continuous"),
+                         trans = "log10") +
+  labs(title = "COVID-19 Confirmed Cases in New Jersey'")
+
+```
+
+The Interactive map of New Jersey with more clear picture of the cities effected. The red color show where most cases found in the state or we can say specific city  which is Bergen Until March 28 2020. 
+#Interactive Map
+
+
+```{r}
+library(plotly)
+
+ggplotly(
+  ggplot(data = ma_county, mapping = aes(x = long, y = lat, group = group)) + 
+  coord_fixed(1.3) + 
+# Add data layer
+  geom_polygon(data = state_join, aes(fill = Confirmed), color = "black") +
+    scale_fill_gradientn(colours = 
+                         wes_palette("Cavalcanti1", 100, type = "continuous")) +
+  ggtitle("COVID-19 Cases in NJ") +
+# Cleaning up the graph
+  labs(x=NULL, y=NULL) +
+  theme(panel.border = element_blank()) +
+  theme(panel.background = element_blank()) +
+  theme(axis.ticks = element_blank()) +
+  theme(axis.text = element_blank())
+)
+```
+
+#Annimated Grpahs for Corona Virus
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(ggplot2)
+library(gganimate)
+library(transformr)
+theme_set(theme_bw())
+```
+
+
+```{r}
+time_series_confirmed_long <- read_csv(url("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv")) %>%
+  rename(Province_State = "Province/State", Country_Region = "Country/Region")  %>% 
+               pivot_longer(-c(Province_State, Country_Region, Lat, Long),
+                            names_to = "Date", values_to = "Confirmed") 
+
+# Let's get the times series data for deaths
+
+time_series_deaths_long <- read_csv(url("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv")) %>%
+  rename(Province_State = "Province/State", Country_Region = "Country/Region")  %>% 
+  pivot_longer(-c(Province_State, Country_Region, Lat, Long),
+               names_to = "Date", values_to = "Deaths")
+
+time_series_recovered_long <- read_csv(url("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv")) %>%
+  rename(Province_State = "Province/State", Country_Region = "Country/Region") %>% 
+  pivot_longer(-c(Province_State, Country_Region, Lat, Long),
+               names_to = "Date", values_to = "Recovered")
+
+# Create Keys 
+
+time_series_confirmed_long <- time_series_confirmed_long %>% 
+  unite(Key, Province_State, Country_Region, Date, sep = ".", remove = FALSE)
+
+time_series_deaths_long <- time_series_deaths_long %>% 
+  unite(Key, Province_State, Country_Region, Date, sep = ".") %>% 
+  select(Key, Deaths)
+
+time_series_recovered_long <- time_series_recovered_long %>% 
+  unite(Key, Province_State, Country_Region, Date, sep = ".") %>% 
+  select(Key, Recovered)
+
+# Join tables
+time_series_long_joined <- full_join(time_series_confirmed_long,
+              time_series_deaths_long, by = c("Key"))
+
+time_series_long_joined <- full_join(time_series_long_joined,
+              time_series_recovered_long, by = c("Key")) %>% 
+    select(-Key)
+
+# Reformat the data
+time_series_long_joined$Date <- mdy(time_series_long_joined$Date)
+
+# Create Report table with counts
+time_series_long_joined_counts <- time_series_long_joined %>% 
+  pivot_longer(-c(Province_State, Country_Region, Lat, Long, Date),
+               names_to = "Report_Type", values_to = "Counts")
+
+```
+
+The Graph Explain us the rises in cases of Corona Virus in 4 countries Iran, Italy, Spain and United States. There is a rapid increase after March 10 2020 specifically the rise in United States is greater than any other country in that short period of time
+```{r}
+data_time <- time_series_long_joined %>% 
+    group_by(Country_Region,Date) %>% 
+    summarise_at(c("Confirmed", "Deaths", "Recovered"), sum) %>% 
+    filter (Country_Region %in% c("Italy","Iran","Spain","US"))
+
+p <- ggplot(data_time, aes(x = Date,  y = Confirmed, color = Country_Region)) + 
+      geom_point() +
+      geom_line() +
+      ggtitle("Confirmed COVID-19 Cases") +
+      geom_point(aes(group = seq_along(Date))) +
+      transition_reveal(Date) 
+    
+animate(p,renderer = gifski_renderer(), end_pause = 15)
+
+```
+
+
+
+
+
+
+
