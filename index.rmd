@@ -20,8 +20,10 @@ This is my new web site!
  
  [Data Maps, Interactive Graphs and Animations from the COVID-19 reporting data](Lab_10.html)
  
- 
- 
+ [Shiny apps using the COVID-19 reporting dataFile Lab11/12  App 1]( https://genome-analysis.shinyapps.io/myapp/)
+ [Shiny apps using the COVID-19 reporting dataFile Lab11/12  App 2](https://genome-analysis.shinyapps.io/Lab_12_E2/)
+ [Shiny apps using the COVID-19 reporting dataFile Lab11/12  App 3](https://genome-analysis.shinyapps.io/Lab_12_E3/)
+ [Shiny apps using the COVID-19 reporting dataFile Lab11/12  App 4]( https://genome-analysis.shinyapps.io/Lab_12_E4/)
 
 [@RCoreTeam]
 [@Chang2015]
